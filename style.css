@@ -573,10 +573,70 @@ button{ font-family: inherit; }
 .astat-unit { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.1em; color: var(--green-deep); font-weight: 600; text-transform: uppercase; }
 .astat-label { font-size: 13px; color: var(--ink-soft); line-height: 1.5; margin-top: 4px; }
 
+.apropos-stats-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 0 72px 0 0;
+  align-self: stretch;
+}
+.apropos-logo {
+  height: auto;
+  width: 120%;
+  max-width: 280px;
+  display: block;
+  object-fit: contain;
+  margin-bottom: 4px;
+  margin-left: 230px;
+  margin-right: auto;
+}
+.apropos-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  flex: 1;
+}
+.astat-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: box-shadow 0.3s var(--ease), transform 0.3s var(--ease);
+}
+.astat-card:hover {
+  box-shadow: 0 8px 32px rgba(27,58,107,0.10);
+  transform: translateY(-3px);
+}
+.astat-num {
+  font-family: var(--font-display);
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1;
+}
+.astat-unit {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: var(--green-deep);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.astat-label {
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+  margin-top: 2px;
+}
 @media (max-width: 880px) {
   .apropos-body { grid-template-columns: 1fr; gap: 40px; padding: 48px 24px; }
   .why-list--standalone { padding: 0; }
-  .apropos-stats { grid-template-columns: 1fr 1fr; padding: 0; }
+  .apropos-stats-wrap { padding: 0; }
+  .apropos-logo { display: none; }
+  .apropos-stats { grid-template-columns: 1fr 1fr; padding: 0; gap: 16px; }
 }
 @media (max-width: 540px) {
   .apropos-stats { grid-template-columns: 1fr; }
@@ -734,7 +794,7 @@ a.contact-row:hover{ transform: translateX(3px); }
 @media (prefers-reduced-motion: reduce){ .view.is-active{ animation: none; } }
 .main-nav a.is-active{ color: var(--navy); }
 
-/* /* =========================================================
+/*  /* =========================================================
    TEASER CARDS
    ========================================================= */
 .teaser { background: #fff; padding: 64px 0 80px; border-top: 1px solid var(--line); }
@@ -747,30 +807,15 @@ a.contact-row:hover{ transform: translateX(3px); }
   display: flex;
   flex-direction: column;
   gap: 14px;
-  transition: box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-              border-color 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-  position: relative;
-  overflow: hidden;
-}
-.teaser-card::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: var(--green);
-  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: border-color 1.2s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 1.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .teaser-card:hover {
-  box-shadow: 0 12px 40px rgba(27,58,107,0.10);
-  transform: translateY(-4px);
-  border-color: rgba(16,19,26,0.06);
+  border-color: rgba(50,169,89,0.5);
+  box-shadow: 0 0 0 1px rgba(50,169,89,0.3);
+  background: rgba(50,169,89,0.04);
 }
-.teaser-card:hover::after {
-  width: 100%;
-}
+
 .teaser-ico { width: 42px; height: 42px; border-radius: 50%; background: var(--paper-dim); display: flex; align-items: center; justify-content: center; color: var(--green-deep); }
 .teaser-ico svg { width: 20px; height: 20px; }
 .teaser-card h3 { font-family: var(--font-display); font-size: 18px; font-weight: 600; color: var(--navy); margin: 0; }
@@ -781,7 +826,6 @@ a.contact-row:hover{ transform: translateX(3px); }
 
 @media (max-width: 1024px) { .teaser-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 540px) { .teaser-grid { grid-template-columns: 1fr; } .teaser-card { padding: 24px 20px; } }
-
 
 /* =========================================================
    DEVIS
@@ -1043,6 +1087,9 @@ a.contact-row:hover{ transform: translateX(3px); }
   .apropos-body { grid-template-columns: 1fr; gap: 32px; padding: 40px 20px 60px; }
   .why-list--standalone { padding: 0; }
   .apropos-stats { grid-template-columns: 1fr 1fr; padding: 0; gap: 16px; }
+  
+  .apropos-stats-wrap { padding: 0; }
+.apropos-logo { display: none; }
   .astat-num { font-size: 34px; }
   .astat-card { padding: 20px 16px; }
   
