@@ -342,7 +342,7 @@ button{ font-family: inherit; }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: 320px;
+  min-height: 480px;
 }
 .page-hero::before {
   content: '';
@@ -359,6 +359,9 @@ button{ font-family: inherit; }
 }
 .page-hero::after { display: none; }
 .page-hero--apropos::before { background-image: none; }
+.page-hero--apropos .page-hero-img-right img {
+  max-height: 450px;
+}
 .page-hero--realisations::before {
   background-image: url('https://i.ibb.co/Mkt4nRVP/dokers-athci.jpg');
   background-size: 100%;
