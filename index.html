@@ -62,17 +62,26 @@
 
 <!-- ============ APP VIEWPORT ============ -->
 <main id="app">
+  
+  <div class="swipe-hints" id="swipe-hints">
+  <span class="swipe-hint swipe-hint--left">&#8249;</span>
+  <span class="swipe-hint swipe-hint--right">&#8250;</span>
+</div>
 
   <!-- <!-- =========================================================
      VUE 1 — ACCUEIL
      ========================================================= -->
 <section class="view" id="view-accueil" data-view="accueil">
-  <div class="hero">
-    <div class="hero-watermark" aria-hidden="true">
-     <img src="https://i.ibb.co/2YW1tszn/image-total-transit.jpg" alt="">
-    </div>
-
-    <div class="hero-grid">
+ <div class="hero">
+  <div class="hero-watermark" aria-hidden="true">
+    <img src="https://i.ibb.co/2YW1tszn/image-total-transit.jpg" alt="">
+  </div>
+  <div class="swipe-hints" id="swipe-hints">
+    <span class="swipe-hint swipe-hint--left">&#8249;</span>
+    <span class="swipe-hint swipe-hint--right">&#8250;</span>
+  </div>
+  <div class="hero-grid">
+    
       <div class="hero-inner">
         <p class="eyebrow"><span class="eyebrow-dot"></span>TRANSIT · LOGISTIQUE · TRANSPORT</p>
         <h1 class="hero-title">
@@ -445,37 +454,37 @@
             <span>CORRIDOR</span><span>RÔLE</span><span>STATUT</span>
           </div>
           <div class="manifest-row">
-            <span class="m-country">Côte d'Ivoire</span>
+            <span class="m-country">🇨🇮 Côte d'Ivoire</span>
             <span class="m-role">Base d'opérations — Abidjan</span>
             <span class="m-status m-status--active">Actif</span>
           </div>
           <div class="manifest-row">
-            <span class="m-country">Ghana</span>
+            <span class="m-country">🇬🇭 Ghana</span>
             <span class="m-role">Corridor portuaire régional</span>
             <span class="m-status m-status--active">Actif</span>
           </div>
           <div class="manifest-row">
-            <span class="m-country">Sénégal</span>
+            <span class="m-country">🇸🇳 Sénégal</span>
             <span class="m-role">Hub Afrique de l'Ouest atlantique</span>
             <span class="m-status m-status--active">Actif</span>
           </div>
           <div class="manifest-row">
-            <span class="m-country">Nigeria</span>
+            <span class="m-country">🇳🇬 Nigeria</span>
             <span class="m-role">Marché à fort volume</span>
             <span class="m-status m-status--active">Actif</span>
           </div>
           <div class="manifest-row">
-            <span class="m-country">Burkina Faso</span>
+            <span class="m-country">🇧🇫 Burkina Faso</span>
             <span class="m-role">Corridor terrestre nord</span>
             <span class="m-status m-status--active">Actif</span>
           </div>
           <div class="manifest-row">
-            <span class="m-country">Mali</span>
+            <span class="m-country">🇲🇱 Mali</span>
             <span class="m-role">Corridor terrestre intérieur</span>
             <span class="m-status m-status--active">Actif</span>
           </div>
           <div class="manifest-row">
-            <span class="m-country">Chine</span>
+            <span class="m-country">🇨🇳 Chine</span>
             <span class="m-role">Origine — sourcing &amp; export</span>
             <span class="m-status m-status--active">Actif</span>
           </div>
@@ -676,32 +685,40 @@
           </label>
           <label>
             <span>Téléphone</span>
-            <input type="tel" name="phone" placeholder="+225 ...">
+           <input type="tel" name="phone" placeholder="Votre numéro de téléphone">
           </label>
         </div>
-        <div class="form-row">
-          <label>
-            <span>Type d'opération</span>
-            <select name="type">
-              <option>Export</option>
-              <option>Import</option>
-              <option>Les deux / à définir</option>
-            </select>
-          </label>
-          <label>
-            <span>Corridor concerné</span>
-            <select name="corridor">
-              <option>Côte d'Ivoire</option>
-              <option>Ghana</option>
-              <option>Sénégal</option>
-              <option>Nigeria</option>
-              <option>Burkina Faso</option>
-              <option>Mali</option>
-              <option>Chine</option>
-              <option>Autre</option>
-            </select>
-          </label>
-        </div>
+       <div class="form-row">
+  <label>
+    <span>Type d'opération</span>
+    <div class="custom-select" id="select-type">
+      <div class="custom-select-trigger">Export</div>
+      <div class="custom-select-options">
+        <div class="custom-option selected" data-value="Export">📦 Export</div>
+        <div class="custom-option" data-value="Import">📥 Import</div>
+        <div class="custom-option" data-value="Les deux / à définir">🔄 Les deux / à définir</div>
+      </div>
+      <input type="hidden" name="type" value="Export">
+    </div>
+  </label>
+  <label>
+    <span>Corridor concerné</span>
+    <div class="custom-select" id="select-corridor">
+      <div class="custom-select-trigger">🇨🇮 Côte d'Ivoire</div>
+      <div class="custom-select-options">
+        <div class="custom-option selected" data-value="Côte d'Ivoire">🇨🇮 Côte d'Ivoire</div>
+        <div class="custom-option" data-value="Ghana">🇬🇭 Ghana</div>
+        <div class="custom-option" data-value="Sénégal">🇸🇳 Sénégal</div>
+        <div class="custom-option" data-value="Nigeria">🇳🇬 Nigeria</div>
+        <div class="custom-option" data-value="Burkina Faso">🇧🇫 Burkina Faso</div>
+        <div class="custom-option" data-value="Mali">🇲🇱 Mali</div>
+        <div class="custom-option" data-value="Chine">🇨🇳 Chine</div>
+        <div class="custom-option" data-value="Autre">🌍 Autre</div>
+      </div>
+      <input type="hidden" name="corridor" value="Côte d'Ivoire">
+    </div>
+  </label>
+</div>
         <label class="full">
           <span>Décrivez votre opération</span>
           <textarea name="message" rows="4" placeholder="Nature de la marchandise, volume, délais souhaités..."></textarea>

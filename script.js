@@ -182,25 +182,24 @@ if (contactForm) {
     var mainNav = document.getElementById('main-nav');
     var body = document.body;
 
-    function openMobileNav() {
-      if (!mainNav || !navToggle) return;
-      mainNav.classList.add('open');
-      navToggle.classList.add('open');
-      navToggle.setAttribute('aria-expanded', 'true');
-      body.classList.add('nav-open');
+   function openMobileNav() {
+  if (!mainNav || !navToggle) return;
+  mainNav.classList.add('open');
+  navToggle.classList.add('open');
+  navToggle.setAttribute('aria-expanded', 'true');
+  body.classList.add('nav-open');
+}
+if (navToggle && mainNav) {
+  navToggle.addEventListener('click', function (e) {
+    e.stopPropagation();
+    var isOpen = mainNav.classList.contains('open');
+    if (isOpen) { closeMobileNav(); } else { openMobileNav(); }
+  });
+  body.addEventListener('click', function (e) {
+    if (body.classList.contains('nav-open') && !mainNav.contains(e.target) && !navToggle.contains(e.target)) {
+      closeMobileNav();
     }
-
-    if (navToggle && mainNav) {
-      navToggle.addEventListener('click', function () {
-        var isOpen = mainNav.classList.contains('open');
-        if (isOpen) { closeMobileNav(); } else { openMobileNav(); }
-      });
-
-      body.addEventListener('click', function (e) {
-        if (body.classList.contains('nav-open') && !mainNav.contains(e.target) && !navToggle.contains(e.target)) {
-          closeMobileNav();
-        }
-      });
+  });
 
       window.addEventListener('keydown', function (e) {
         if (e.key === 'Escape') closeMobileNav();
@@ -333,5 +332,84 @@ if (contactForm) {
       targets.forEach(function (el) { el.classList.add('is-visible'); });
     }
   }
+  
+  
+  // SWIPE NAVIGATION MOBILE
+var touchStartX = 0;
+var touchEndX = 0;
+var swipeThreshold = 80;
+var swipeHints = document.getElementById('swipe-hints');
+var scrollTimer = null;
+
+// Cache les hints pendant le scroll
+window.addEventListener('scroll', function() {
+  if (swipeHints) swipeHints.classList.add('hidden');
+  clearTimeout(scrollTimer);
+  scrollTimer = setTimeout(function() {
+    if (swipeHints) swipeHints.classList.remove('hidden');
+  }, 1500);
+}, { passive: true });
+
+document.addEventListener('touchstart', function(e) {
+  touchStartX = e.changedTouches[0].screenX;
+  if (swipeHints) swipeHints.classList.add('hidden');
+}, { passive: true });
+
+document.addEventListener('touchend', function(e) {
+  touchEndX = e.changedTouches[0].screenX;
+  handleSwipe();
+  setTimeout(function() {
+    if (swipeHints) swipeHints.classList.remove('hidden');
+  }, 1000);
+}, { passive: true });
+
+function handleSwipe() {
+  var diff = touchStartX - touchEndX;
+  if (Math.abs(diff) < swipeThreshold) return;
+
+  var currentRoute = parseRoute();
+  var currentIndex = ROUTES.indexOf(currentRoute);
+
+  if (diff > 0) {
+    var nextIndex = currentIndex + 1;
+    if (nextIndex < ROUTES.length) {
+      navigateTo(ROUTES[nextIndex]);
+    }
+  } else {
+    var prevIndex = currentIndex - 1;
+    if (prevIndex >= 0) {
+      navigateTo(ROUTES[prevIndex]);
+    }
+  }
+}
+  
+  // CUSTOM SELECT
+document.querySelectorAll('.custom-select').forEach(function(select) {
+  var trigger = select.querySelector('.custom-select-trigger');
+  var options = select.querySelectorAll('.custom-option');
+  var input = select.querySelector('input[type="hidden"]');
+
+  trigger.addEventListener('click', function(e) {
+    e.stopPropagation();
+    document.querySelectorAll('.custom-select.open').forEach(function(s) {
+      if (s !== select) s.classList.remove('open');
+    });
+    select.classList.toggle('open');
+  });
+
+  options.forEach(function(option) {
+    option.addEventListener('click', function() {
+      options.forEach(function(o) { o.classList.remove('selected'); });
+      option.classList.add('selected');
+      trigger.textContent = option.textContent;
+      input.value = option.getAttribute('data-value');
+      select.classList.remove('open');
+    });
+  });
+
+  document.addEventListener('click', function() {
+    select.classList.remove('open');
+  });
+});
 
 })();
