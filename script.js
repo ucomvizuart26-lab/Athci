@@ -237,6 +237,7 @@
     if (navToggle && mainNav) {
       navToggle.addEventListener('click', function(e) {
         e.stopPropagation();
+        e.preventDefault();
         var isOpen = mainNav.classList.contains('open');
         if (isOpen) {
           mainNav.classList.remove('open');
@@ -252,14 +253,16 @@
       });
 
       document.addEventListener('click', function(e) {
-        if (body.classList.contains('nav-open') &&
-            !mainNav.contains(e.target) &&
-            !navToggle.contains(e.target)) {
-          mainNav.classList.remove('open');
-          navToggle.classList.remove('open');
-          navToggle.setAttribute('aria-expanded', 'false');
-          body.classList.remove('nav-open');
-        }
+        setTimeout(function() {
+          if (body.classList.contains('nav-open') &&
+              !mainNav.contains(e.target) &&
+              !navToggle.contains(e.target)) {
+            mainNav.classList.remove('open');
+            navToggle.classList.remove('open');
+            navToggle.setAttribute('aria-expanded', 'false');
+            body.classList.remove('nav-open');
+          }
+        }, 10);
       });
 
       window.addEventListener('keydown', function(e) {

@@ -200,7 +200,7 @@ button{ font-family: inherit; }
 .page-hero-img-right { position: absolute; right: 0; bottom: 0; z-index: 1; width: 40%; height: 100%; display: flex; align-items: flex-end; justify-content: flex-end; overflow: hidden; opacity: 0; transform: translateX(40px); }
 .page-hero-img-right img { width: auto; height: auto; object-fit: contain; object-position: bottom right; opacity: 0.9; }
 .page-hero--realisations .page-hero-img-right img { max-height: 520px; }
-.page-hero--services .page-hero-img-right { width: 45%; bottom: -45px; overflow: visible; }
+.page-hero--services .page-hero-img-right { width: 50%; bottom: -35px; overflow: visible; }
 .page-hero--devis .page-hero-inner { text-align: center; align-items: center; }
 .page-title { font-family: var(--font-display); font-size: clamp(26px, 4.6vw, 48px); line-height: 1.14; font-weight: 600; letter-spacing: -0.01em; margin: 0 0 18px; max-width: 600px; }
 .page-sub { font-size: 15px; line-height: 1.65; color: rgba(255,255,255,0.78); max-width: 580px; margin: 0; }
@@ -291,7 +291,7 @@ button{ font-family: inherit; }
 .process-step h3{ font-family: var(--font-display); font-size: 17px; font-weight: 600; color: var(--navy); margin: 0 0 10px; }
 .process-step p{ font-size: 14px; line-height: 1.6; color: var(--ink-soft); margin: 0; padding-right: 12px; }
 
-/* =========================================================
+/* /* =========================================================
    CONTACT
    ========================================================= */
 .contact{ background: linear-gradient(165deg, var(--navy-deep), var(--navy)); color: #fff; padding: 72px 0; }
@@ -324,6 +324,8 @@ a.contact-row:hover{ transform: translateX(3px); }
   width: 100%;
   appearance: none;
   -webkit-appearance: none;
+}
+.contact-form select {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%233C4250' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 14px center;
@@ -335,6 +337,7 @@ a.contact-row:hover{ transform: translateX(3px); }
 .form-note{ margin: 0; font-size: 13px; color: var(--green-deep); font-weight: 600; min-height: 18px; }
 .contact-cta-devis{ margin-top: 28px; color: #fff; border-color: rgba(255,255,255,0.3); }
 .contact-cta-devis:hover{ border-color: #fff; background: rgba(255,255,255,0.08); }
+
 
 /* =========================================================
    FOOTER
@@ -351,12 +354,13 @@ a.contact-row:hover{ transform: translateX(3px); }
 #app{ position: relative; }
 .view { display: none; }
 .view.is-active { display: block; }
-.view.swipe-enter-right { animation: swipe-from-right 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-.view.swipe-enter-left { animation: swipe-from-left 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-@keyframes swipe-from-right { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
-@keyframes swipe-from-left { from { opacity: 0; transform: translateX(-40px); } to { opacity: 1; transform: translateX(0); } }
+.view.swipe-enter-right { animation: swipe-from-right 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+.view.swipe-enter-left { animation: swipe-from-left 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+@keyframes swipe-from-right { from { opacity: 1; transform: translateX(100%); } to { opacity: 1; transform: translateX(0); } }
+@keyframes swipe-from-left { from { opacity: 1; transform: translateX(-100%); } to { opacity: 1; transform: translateX(0); } }
 @media (prefers-reduced-motion: reduce){ .view.is-active{ animation: none; } }
 .main-nav a.is-active{ color: var(--navy); }
+
 
 /* =========================================================
    TEASER CARDS
