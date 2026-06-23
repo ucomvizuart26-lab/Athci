@@ -530,8 +530,8 @@ a.contact-row:hover{ transform: translateX(3px); }
   .page-sub { text-align: center; }
   .page-hero-img-right { display: flex !important; position: relative; width: 100%; height: 260px; justify-content: center; align-items: flex-end; overflow: hidden; margin-top: 16px; bottom: auto; right: auto; top: auto; }
   .page-hero-img-right img { height: 100%; width: auto; max-height: 260px; object-fit: contain; object-position: bottom center; }
-  .page-hero--services .page-hero-img-right { height: 380px; overflow: visible; bottom: auto; justify-content: center; align-items: flex-end; }
-  .page-hero--services .page-hero-img-right img { max-height: 380px; width: 90%; object-fit: contain; object-position: bottom center; }
+ .page-hero--services .page-hero-img-right { height: 420px; overflow: visible; bottom: auto; justify-content: center; align-items: flex-end; }
+.page-hero--services .page-hero-img-right img { max-height: 420px; width: 100%; object-fit: contain; object-position: bottom center; }
 
   /* APROPOS */
   .apropos-body { grid-template-columns: 1fr; gap: 32px; padding: 40px 20px 60px; }
@@ -539,6 +539,7 @@ a.contact-row:hover{ transform: translateX(3px); }
   .why-item { text-align: left; }
   .why-item h3 { text-align: center; }
   .why-item p { text-align: center; }
+  .why-item > div { text-align: center; }
   .apropos-stats-wrap { padding: 0; }
   .apropos-logo { display: none; }
   .apropos-stats { grid-template-columns: 1fr 1fr; padding: 0; gap: 16px; }
@@ -551,8 +552,8 @@ a.contact-row:hover{ transform: translateX(3px); }
   .contact-form { padding: 24px 18px; opacity: 1 !important; transform: none !important; transition: none !important; }
   .contact-intro { text-align: center; }
   .contact-intro .eyebrow { justify-content: center; }
-  .contact-details { align-items: center; }
-  .contact-row { justify-content: center; }
+ .contact-details { align-items: flex-start; width: fit-content; margin: 0 auto; }
+.contact-row { justify-content: flex-start; }
 
   /* SERVICES */
   .service-grid { grid-template-columns: 1fr; }

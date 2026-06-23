@@ -164,27 +164,48 @@
     renderRoute(parseRoute());
   });
 
-  // NAV TOGGLE — initialisé immédiatement hors DOMContentLoaded
-  if (navToggle && mainNav) {
-    navToggle.addEventListener('click', function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-      var isOpen = mainNav.classList.contains('open');
-      if (isOpen) { closeMobileNav(); } else { openMobileNav(); }
-    }, true);
+ // NAV TOGGLE — solution définitive
+window.addEventListener('load', function() {
+  var navToggle = document.getElementById('nav-toggle');
+  var mainNav = document.getElementById('main-nav');
+  var body = document.body;
 
-    body.addEventListener('click', function (e) {
-      if (body.classList.contains('nav-open') &&
-          !mainNav.contains(e.target) &&
-          !navToggle.contains(e.target)) {
-        closeMobileNav();
-      }
-    });
+  if (!navToggle || !mainNav) return;
 
-    window.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape') closeMobileNav();
-    });
-  }
+  navToggle.addEventListener('touchend', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    var isOpen = mainNav.classList.contains('open');
+    if (isOpen) { closeMobileNav(); } else { openMobileNav(); }
+  }, { passive: false });
+
+  navToggle.addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    var isOpen = mainNav.classList.contains('open');
+    if (isOpen) { closeMobileNav(); } else { openMobileNav(); }
+  }, true);
+
+  body.addEventListener('touchend', function(e) {
+    if (body.classList.contains('nav-open') &&
+        !mainNav.contains(e.target) &&
+        !navToggle.contains(e.target)) {
+      closeMobileNav();
+    }
+  }, { passive: true });
+
+  body.addEventListener('click', function(e) {
+    if (body.classList.contains('nav-open') &&
+        !mainNav.contains(e.target) &&
+        !navToggle.contains(e.target)) {
+      closeMobileNav();
+    }
+  });
+
+  window.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeMobileNav();
+  });
+});
 
   document.addEventListener('DOMContentLoaded', function () {
 
