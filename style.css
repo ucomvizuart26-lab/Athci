@@ -532,11 +532,11 @@ a.contact-row:hover{ transform: translateX(3px); }
   .page-hero-img-right img { height: 100%; width: auto; max-height: 260px; object-fit: contain; object-position: bottom center; }
  .page-hero--services .page-hero-img-right { height: 420px; overflow: visible; bottom: auto; justify-content: center; align-items: flex-end; }
 .page-hero--services .page-hero-img-right img {
-  height: 420px;
+  height: 328px;
   width: auto;
   min-width: 100%;
   object-fit: cover;
-  object-position: bottom center;
+  object-position: center 100%;
 }
   
   /* APROPOS */
@@ -615,7 +615,7 @@ a.contact-row:hover{ transform: translateX(3px); }
   .page-title { font-size: clamp(22px, 7vw, 32px); }
   .page-sub { font-size: 14px; }
   .page-hero-img-right { height: 180px; }
-  .page-hero-img-right img { max-height: 180px; }
+  .page-hero-img-right img { max-height: 362px; }
   .apropos-body { padding: 40px 20px 60px; gap: 32px; }
   .apropos-stats { grid-template-columns: 1fr; }
   .astat-num { font-size: 34px; }
