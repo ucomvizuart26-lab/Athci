@@ -542,11 +542,13 @@ a.contact-row:hover{ transform: translateX(3px); }
   .page-hero-img-right img { height: 100%; width: auto; max-height: 260px; object-fit: contain; object-position: bottom center; }
   
 .page-hero--services .page-hero-img-right {
-  height: 520px;
+  height: 300px;
   overflow: visible;
+  padding-top: 0px;
+  padding-bottom: 0px;
 }
 .page-hero--services .page-hero-img-right img {
-  height: 520px;
+  height: 700px;   /* augmente ce chiffre pour agrandir la dame, diminue pour réduire */
   width: auto;
   object-fit: contain;
   object-position: bottom center;
