@@ -54,48 +54,72 @@
     views[r] = document.getElementById('view-' + r);
   });
 
-  var navLinks = document.querySelectorAll('[data-route]');
-  var mainNav = document.getElementById('main-nav');
-  var navToggle = document.getElementById('nav-toggle');
-  var body = document.body;
-
-  function closeMobileNav() {
-    if (mainNav) mainNav.classList.remove('open');
-    if (navToggle) {
-      navToggle.classList.remove('open');
-      navToggle.setAttribute('aria-expanded', 'false');
-    }
-    body.classList.remove('nav-open');
-  }
-
-  function openMobileNav() {
-    if (!mainNav || !navToggle) return;
-    mainNav.classList.add('open');
-    navToggle.classList.add('open');
-    navToggle.setAttribute('aria-expanded', 'true');
-    body.classList.add('nav-open');
-  }
-
   function parseRoute() {
     var hash = window.location.hash.replace('#', '').trim();
     if (!hash) return DEFAULT_ROUTE;
     return ROUTES.indexOf(hash) !== -1 ? hash : DEFAULT_ROUTE;
   }
 
-  function setActiveNav(route) {
-    navLinks.forEach(function (link) {
-      var isMatch = link.getAttribute('data-route') === route;
-      link.classList.toggle('is-active', isMatch);
-      if (isMatch) {
-        link.setAttribute('aria-current', 'page');
-      } else {
-        link.removeAttribute('aria-current');
-      }
-    });
+  function navigateTo(route) {
+    if (ROUTES.indexOf(route) === -1) route = DEFAULT_ROUTE;
+    if (window.location.hash.replace('#', '') === route) {
+      renderRoute(route);
+    } else {
+      window.location.hash = route;
+    }
+  }
+
+  window.addEventListener('hashchange', function () {
+    renderRoute(parseRoute());
+  });
+
+  var prefersReducedMotionGlobal = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function initRevealFor(viewEl) {
+    if (!viewEl) return;
+    var targets = viewEl.querySelectorAll(
+      '.service-card, .why-item, .process-step, .manifest-row, .section-head, .contact-form, .contact-intro, .teaser-card, .real-card'
+    );
+
+    targets.forEach(function (el) { el.classList.add('reveal'); });
+
+    if ('IntersectionObserver' in window && !prefersReducedMotionGlobal) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry, i) {
+          if (entry.isIntersecting) {
+            var el = entry.target;
+            var delay = (i % 4) * 60;
+            setTimeout(function () { el.classList.add('is-visible'); }, delay);
+            io.unobserve(el);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+      targets.forEach(function (el) { io.observe(el); });
+    } else {
+      targets.forEach(function (el) { el.classList.add('is-visible'); });
+    }
+  }
+
+  function routeTitle(route) {
+    var titles = {
+      accueil: 'ATH CI — The Best Forwarder | Transit & Logistique',
+      services: 'Nos prestations — ATH CI',
+      apropos: 'Qui sommes-nous — ATH CI',
+      contact: 'Contact — ATH CI',
+      devis: 'Demander un devis — ATH CI',
+      realisations: 'Réalisations — ATH CI'
+    };
+    return titles[route] || titles[DEFAULT_ROUTE];
   }
 
   function renderRoute(route, opts) {
     opts = opts || {};
+
+    var navLinks = document.querySelectorAll('[data-route]');
+    var mainNav = document.getElementById('main-nav');
+    var navToggle = document.getElementById('nav-toggle');
+    var body = document.body;
 
     Object.keys(views).forEach(function (key) {
       var el = views[key];
@@ -107,14 +131,30 @@
       }
     });
 
-    setActiveNav(route);
+    navLinks.forEach(function (link) {
+      var isMatch = link.getAttribute('data-route') === route;
+      link.classList.toggle('is-active', isMatch);
+      if (isMatch) {
+        link.setAttribute('aria-current', 'page');
+      } else {
+        link.removeAttribute('aria-current');
+      }
+    });
+
     document.title = routeTitle(route);
 
     if (!opts.skipScroll) {
       window.scrollTo({ top: 0, behavior: 'auto' });
     }
 
-    closeMobileNav();
+    // Fermer le menu mobile
+    if (mainNav) mainNav.classList.remove('open');
+    if (navToggle) {
+      navToggle.classList.remove('open');
+      navToggle.setAttribute('aria-expanded', 'false');
+    }
+    body.classList.remove('nav-open');
+
     initRevealFor(views[route]);
 
     // Reset animations contact
@@ -139,32 +179,12 @@
     }, 50);
   }
 
-  function routeTitle(route) {
-    var titles = {
-      accueil: 'ATH CI — The Best Forwarder | Transit & Logistique',
-      services: 'Nos prestations — ATH CI',
-      apropos: 'Qui sommes-nous — ATH CI',
-      contact: 'Contact — ATH CI',
-      devis: 'Demander un devis — ATH CI',
-      realisations: 'Réalisations — ATH CI'
-    };
-    return titles[route] || titles[DEFAULT_ROUTE];
-  }
-
-  function navigateTo(route) {
-    if (ROUTES.indexOf(route) === -1) route = DEFAULT_ROUTE;
-    if (window.location.hash.replace('#', '') === route) {
-      renderRoute(route);
-    } else {
-      window.location.hash = route;
-    }
-  }
-
-  window.addEventListener('hashchange', function () {
-    renderRoute(parseRoute());
-  });
-
   document.addEventListener('DOMContentLoaded', function () {
+
+    // Toutes les variables DOM déclarées ici, après que le DOM est prêt
+    var navToggle = document.getElementById('nav-toggle');
+    var mainNav = document.getElementById('main-nav');
+    var body = document.body;
 
     var yearEl = document.getElementById('year');
     if (yearEl) yearEl.textContent = new Date().getFullYear();
@@ -174,28 +194,50 @@
     }
     renderRoute(parseRoute(), { skipScroll: true });
 
+    // -------------------------------------------------------
     // BURGER MENU
+    // -------------------------------------------------------
     if (navToggle && mainNav) {
       navToggle.addEventListener('click', function(e) {
         e.stopPropagation();
         var isOpen = mainNav.classList.contains('open');
-        if (isOpen) { closeMobileNav(); } else { openMobileNav(); }
+        if (isOpen) {
+          mainNav.classList.remove('open');
+          navToggle.classList.remove('open');
+          navToggle.setAttribute('aria-expanded', 'false');
+          body.classList.remove('nav-open');
+        } else {
+          mainNav.classList.add('open');
+          navToggle.classList.add('open');
+          navToggle.setAttribute('aria-expanded', 'true');
+          body.classList.add('nav-open');
+        }
       });
 
       document.addEventListener('click', function(e) {
         if (body.classList.contains('nav-open') &&
             !mainNav.contains(e.target) &&
             !navToggle.contains(e.target)) {
-          closeMobileNav();
+          mainNav.classList.remove('open');
+          navToggle.classList.remove('open');
+          navToggle.setAttribute('aria-expanded', 'false');
+          body.classList.remove('nav-open');
         }
       });
 
       window.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') closeMobileNav();
+        if (e.key === 'Escape') {
+          mainNav.classList.remove('open');
+          navToggle.classList.remove('open');
+          navToggle.setAttribute('aria-expanded', 'false');
+          body.classList.remove('nav-open');
+        }
       });
     }
 
+    // -------------------------------------------------------
     // PACKETS ANIMATION
+    // -------------------------------------------------------
     var routeIds = ['r1', 'r2', 'r3', 'r4', 'r5', 'r6'];
     var packetsLayer = document.querySelector('.packets');
     var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -230,10 +272,9 @@
       });
     }
 
+    // -------------------------------------------------------
     // FORMS
-    bindForm('contact-form', 'form-note');
-    bindForm('contact-form-simple', 'form-note-simple');
-
+    // -------------------------------------------------------
     function bindForm(formId, noteId) {
       var form = document.getElementById(formId);
       var note = document.getElementById(noteId);
@@ -265,7 +306,12 @@
       });
     }
 
+    bindForm('contact-form', 'form-note');
+    bindForm('contact-form-simple', 'form-note-simple');
+
+    // -------------------------------------------------------
     // HEADER SHADOW
+    // -------------------------------------------------------
     var header = document.querySelector('.site-header');
     if (header) {
       window.addEventListener('scroll', function () {
@@ -273,7 +319,9 @@
       }, { passive: true });
     }
 
+    // -------------------------------------------------------
     // FILTRES RÉALISATIONS
+    // -------------------------------------------------------
     var filterBtns = document.querySelectorAll('.real-filter');
     var realCards = document.querySelectorAll('.real-card');
 
@@ -292,7 +340,9 @@
       });
     });
 
+    // -------------------------------------------------------
     // CUSTOM SELECT
+    // -------------------------------------------------------
     document.querySelectorAll('.custom-select').forEach(function(select) {
       var trigger = select.querySelector('.custom-select-trigger');
       var options = select.querySelectorAll('.custom-option');
@@ -327,35 +377,9 @@
 
   });
 
-  var prefersReducedMotionGlobal = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  function initRevealFor(viewEl) {
-    if (!viewEl) return;
-    var targets = viewEl.querySelectorAll(
-      '.service-card, .why-item, .process-step, .manifest-row, .section-head, .contact-form, .contact-intro, .teaser-card, .real-card'
-    );
-
-    targets.forEach(function (el) { el.classList.add('reveal'); });
-
-    if ('IntersectionObserver' in window && !prefersReducedMotionGlobal) {
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry, i) {
-          if (entry.isIntersecting) {
-            var el = entry.target;
-            var delay = (i % 4) * 60;
-            setTimeout(function () { el.classList.add('is-visible'); }, delay);
-            io.unobserve(el);
-          }
-        });
-      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-
-      targets.forEach(function (el) { io.observe(el); });
-    } else {
-      targets.forEach(function (el) { el.classList.add('is-visible'); });
-    }
-  }
-
+  // -------------------------------------------------------
   // SWIPE NAVIGATION MOBILE
+  // -------------------------------------------------------
   var touchStartX = 0;
   var touchEndX = 0;
   var swipeThreshold = 80;
