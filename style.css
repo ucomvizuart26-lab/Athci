@@ -534,7 +534,7 @@ a.contact-row:hover{ transform: translateX(3px); }
 .page-hero--services .page-hero-img-right img {
   height: 328px;
   width: auto;
-  min-width: 100%;
+  min-width: 169%;
   object-fit: cover;
   object-position: center 100%;
 }
