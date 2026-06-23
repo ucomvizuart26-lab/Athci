@@ -54,13 +54,6 @@
     views[r] = document.getElementById('view-' + r);
   });
 
-  // -------------------------------------------------------
-  // FIX BUG 1 : navToggle et mainNav déclarés UNE SEULE FOIS
-  // au niveau du module, pas redéclarés dans renderRoute()
-  // -------------------------------------------------------
-  var navToggle = document.getElementById('nav-toggle');
-  var mainNav   = document.getElementById('main-nav');
-
   function parseRoute() {
     var hash = window.location.hash.replace('#', '').trim();
     if (!hash) return DEFAULT_ROUTE;
@@ -120,10 +113,43 @@
     return titles[route] || titles[DEFAULT_ROUTE];
   }
 
+  function initCustomSelects() {
+    document.querySelectorAll('.custom-select').forEach(function(select) {
+      if (select.dataset.bound) return;
+      select.dataset.bound = 'true';
+
+      var trigger = select.querySelector('.custom-select-trigger');
+      var options = select.querySelectorAll('.custom-option');
+      var input = select.querySelector('input[type="hidden"]');
+
+      trigger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        document.querySelectorAll('.custom-select.open').forEach(function(s) {
+          if (s !== select) s.classList.remove('open');
+        });
+        select.classList.toggle('open');
+      });
+
+      options.forEach(function(option) {
+        option.addEventListener('click', function(e) {
+          e.stopPropagation();
+          options.forEach(function(o) { o.classList.remove('selected'); });
+          option.classList.add('selected');
+          trigger.textContent = option.textContent;
+          trigger.classList.remove('placeholder');
+          input.value = option.getAttribute('data-value');
+          select.classList.remove('open');
+        });
+      });
+    });
+  }
+
   function renderRoute(route, opts) {
     opts = opts || {};
 
     var navLinks = document.querySelectorAll('[data-route]');
+    var mainNav = document.getElementById('main-nav');
+    var navToggle = document.getElementById('nav-toggle');
     var body = document.body;
 
     Object.keys(views).forEach(function (key) {
@@ -152,7 +178,7 @@
       window.scrollTo({ top: 0, behavior: 'auto' });
     }
 
-    // Fermer le menu mobile — utilise les variables du scope parent
+    // Fermer le menu mobile
     if (mainNav) mainNav.classList.remove('open');
     if (navToggle) {
       navToggle.classList.remove('open');
@@ -182,10 +208,19 @@
         pageHero.classList.add('hero-animate');
       }
     }, 50);
+
+    // Initialiser les custom selects à chaque fois que devis devient actif
+    if (route === 'devis') {
+      setTimeout(function() {
+        initCustomSelects();
+      }, 100);
+    }
   }
 
   document.addEventListener('DOMContentLoaded', function () {
 
+    var navToggle = document.getElementById('nav-toggle');
+    var mainNav = document.getElementById('main-nav');
     var body = document.body;
 
     var yearEl = document.getElementById('year');
@@ -343,54 +378,10 @@
     });
 
     // -------------------------------------------------------
-    // CUSTOM SELECT
-    // FIX BUG 2 : utiliser mousedown/touchstart au lieu de click
-    // pour éviter que le listener global "click" ferme le select
-    // au même tick sur mobile
+    // CUSTOM SELECT — initialisation au chargement
     // -------------------------------------------------------
-    document.querySelectorAll('.custom-select').forEach(function(select) {
-      var trigger = select.querySelector('.custom-select-trigger');
-      var options = select.querySelectorAll('.custom-option');
-      var input = select.querySelector('input[type="hidden"]');
+    initCustomSelects();
 
-      // On écoute 'mousedown' sur desktop et 'touchstart' sur mobile
-      // Ces events précèdent le 'click' global qui fermerait tout
-      function openSelect(e) {
-        e.preventDefault();   // empêche le focus shift / scroll inattendu
-        e.stopPropagation();
-        var wasOpen = select.classList.contains('open');
-        // Fermer tous les autres
-        document.querySelectorAll('.custom-select.open').forEach(function(s) {
-          if (s !== select) s.classList.remove('open');
-        });
-        // Toggle celui-ci
-        if (wasOpen) {
-          select.classList.remove('open');
-        } else {
-          select.classList.add('open');
-        }
-      }
-
-      trigger.addEventListener('mousedown', openSelect);
-      trigger.addEventListener('touchstart', openSelect, { passive: false });
-
-      options.forEach(function(option) {
-        function selectOption(e) {
-          e.preventDefault();
-          e.stopPropagation();
-          options.forEach(function(o) { o.classList.remove('selected'); });
-          option.classList.add('selected');
-          trigger.textContent = option.textContent;
-          trigger.classList.remove('placeholder');
-          input.value = option.getAttribute('data-value');
-          select.classList.remove('open');
-        }
-        option.addEventListener('mousedown', selectOption);
-        option.addEventListener('touchstart', selectOption, { passive: false });
-      });
-    });
-
-    // Fermer les selects ouverts au clic ailleurs
     document.addEventListener('click', function() {
       document.querySelectorAll('.custom-select.open').forEach(function(s) {
         s.classList.remove('open');
