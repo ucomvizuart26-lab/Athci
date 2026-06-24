@@ -234,49 +234,49 @@
     // BURGER MENU
     // -------------------------------------------------------
     if (navToggle && mainNav) {
+  var touchHandled = false;
 
-      function openNav() {
-        mainNav.classList.add('open');
-        navToggle.classList.add('open');
-        navToggle.setAttribute('aria-expanded', 'true');
-        body.classList.add('nav-open');
-      }
+  function openNav() {
+    mainNav.classList.add('open');
+    navToggle.classList.add('open');
+    navToggle.setAttribute('aria-expanded', 'true');
+    body.classList.add('nav-open');
+  }
 
-      function closeNav() {
-        mainNav.classList.remove('open');
-        navToggle.classList.remove('open');
-        navToggle.setAttribute('aria-expanded', 'false');
-        body.classList.remove('nav-open');
-      }
+  function closeNav() {
+    mainNav.classList.remove('open');
+    navToggle.classList.remove('open');
+    navToggle.setAttribute('aria-expanded', 'false');
+    body.classList.remove('nav-open');
+  }
 
-      // touchstart — empêche le click fantôme 300ms
-      navToggle.addEventListener('touchstart', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        mainNav.classList.contains('open') ? closeNav() : openNav();
-      }, { passive: false });
+  navToggle.addEventListener('touchstart', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    touchHandled = true;
+    mainNav.classList.contains('open') ? closeNav() : openNav();
+    setTimeout(function() { touchHandled = false; }, 500);
+  }, { passive: false });
 
-      // click — pour desktop et fallback
-      navToggle.addEventListener('click', function(e) {
-        e.stopPropagation();
-        e.preventDefault();
-        mainNav.classList.contains('open') ? closeNav() : openNav();
-      });
+  navToggle.addEventListener('click', function(e) {
+    if (touchHandled) return;
+    e.stopPropagation();
+    mainNav.classList.contains('open') ? closeNav() : openNav();
+  });
 
-      // Fermer en cliquant dehors
-      document.addEventListener('click', function(e) {
-        if (body.classList.contains('nav-open') &&
-            !mainNav.contains(e.target) &&
-            !navToggle.contains(e.target)) {
-          closeNav();
-        }
-      });
-
-      // Fermer avec Escape
-      window.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') closeNav();
-      });
+  document.addEventListener('click', function(e) {
+    if (touchHandled) return;
+    if (body.classList.contains('nav-open') &&
+        !mainNav.contains(e.target) &&
+        !navToggle.contains(e.target)) {
+      closeNav();
     }
+  });
+
+  window.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeNav();
+  });
+}
 
     // -------------------------------------------------------
     // PACKETS ANIMATION
