@@ -62,11 +62,8 @@
 
   function navigateTo(route) {
     if (ROUTES.indexOf(route) === -1) route = DEFAULT_ROUTE;
-    if (window.location.hash.replace('#', '') === route) {
-      renderRoute(route);
-    } else {
-      window.location.hash = route;
-    }
+    renderRoute(route);
+    window.location.hash = route;
   }
 
   window.addEventListener('hashchange', function () {
