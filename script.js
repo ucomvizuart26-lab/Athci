@@ -1,3 +1,20 @@
+var ROUTES_G = ['accueil', 'services', 'apropos', 'realisations', 'contact', 'devis'];
+
+window.goTo = function(route) {
+  document.querySelectorAll('.view').forEach(function(v) { v.classList.remove('is-active'); });
+  var el = document.getElementById('view-' + route);
+  if (el) el.classList.add('is-active');
+  document.querySelectorAll('[data-route]').forEach(function(l) {
+    l.classList.toggle('is-active', l.getAttribute('data-route') === route);
+  });
+  var nav = document.getElementById('main-nav');
+  var toggle = document.getElementById('nav-toggle');
+  if (nav) nav.classList.remove('open');
+  if (toggle) { toggle.classList.remove('open'); toggle.setAttribute('aria-expanded','false'); }
+  document.body.classList.remove('nav-open');
+  window.location.hash = route;
+  window.scrollTo(0,0);
+};
 // ===================================================================
 // ATH CI — SPA router + interactions
 // ===================================================================
