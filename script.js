@@ -433,47 +433,71 @@ if (packetsLayer && !prefersReducedMotion) {
 
   });
 
- // -------------------------------------------------------
+// -------------------------------------------------------
 // SWIPE NAVIGATION MOBILE — FLUIDE
 // -------------------------------------------------------
 var touchStartX = 0;
+var touchStartY = 0;
 var touchCurrentX = 0;
 var isSwiping = false;
+var isScrolling = false;
+var directionLocked = false;
 var swipeThreshold = 60;
 var currentView = null;
 var nextView = null;
 var direction = null;
 
+// Fond noir pendant la transition
+var swipeBg = document.createElement('div');
+swipeBg.style.cssText = 'position:fixed;inset:0;background:#000;z-index:998;opacity:0;pointer-events:none;transition:opacity 0.15s ease;';
+document.body.appendChild(swipeBg);
+
 document.addEventListener('touchstart', function(e) {
   if (e.target.closest('.custom-select') || e.target.closest('.main-nav')) return;
   touchStartX = e.changedTouches[0].screenX;
+  touchStartY = e.changedTouches[0].screenY;
   touchCurrentX = touchStartX;
   isSwiping = false;
-
-  currentView = document.querySelector('.view.is-active');
-  var currentRoute = parseRoute();
-  var currentIndex = ROUTES.indexOf(currentRoute);
-
-  var diff = 0;
+  isScrolling = false;
+  directionLocked = false;
   direction = null;
   nextView = null;
 
-  currentView.style.transition = 'none';
-  currentView.style.transform = 'translateX(0)';
+  currentView = document.querySelector('.view.is-active');
+  if (currentView) {
+    currentView.style.transition = 'none';
+    currentView.style.transform = 'translateX(0)';
+  }
 }, { passive: true });
 
 document.addEventListener('touchmove', function(e) {
   if (!currentView) return;
   touchCurrentX = e.changedTouches[0].screenX;
-  var diff = touchCurrentX - touchStartX;
+  var touchCurrentY = e.changedTouches[0].screenY;
+  var diffX = touchCurrentX - touchStartX;
+  var diffY = touchCurrentY - touchStartY;
 
-  if (Math.abs(diff) < 8) return;
+  // Verrouiller la direction une seule fois
+  if (!directionLocked) {
+    if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 8) {
+      directionLocked = true;
+      isScrolling = false;
+    } else if (Math.abs(diffY) > Math.abs(diffX) && Math.abs(diffY) > 8) {
+      directionLocked = true;
+      isScrolling = true;
+    }
+    return;
+  }
+
+  // Scroll vertical — on ne fait rien
+  if (isScrolling) return;
+
   isSwiping = true;
 
   var currentRoute = parseRoute();
   var currentIndex = ROUTES.indexOf(currentRoute);
 
-  if (diff < 0 && currentIndex < ROUTES.length - 1) {
+  if (diffX < 0 && currentIndex < ROUTES.length - 1) {
     direction = 'left';
     if (!nextView) {
       nextView = document.getElementById('view-' + ROUTES[currentIndex + 1]);
@@ -483,7 +507,7 @@ document.addEventListener('touchmove', function(e) {
         nextView.style.transform = 'translateX(100%)';
       }
     }
-  } else if (diff > 0 && currentIndex > 0) {
+  } else if (diffX > 0 && currentIndex > 0) {
     direction = 'right';
     if (!nextView) {
       nextView = document.getElementById('view-' + ROUTES[currentIndex - 1]);
@@ -496,14 +520,22 @@ document.addEventListener('touchmove', function(e) {
   }
 
   if (nextView) {
-    var pct = diff / window.innerWidth;
-    currentView.style.transform = 'translateX(' + (diff) + 'px)';
-    nextView.style.transform = 'translateX(' + (diff + (direction === 'left' ? window.innerWidth : -window.innerWidth)) + 'px)';
+    currentView.style.transform = 'translateX(' + diffX + 'px)';
+    nextView.style.transform = 'translateX(' + (diffX + (direction === 'left' ? window.innerWidth : -window.innerWidth)) + 'px)';
+    // Légère teinte sombre pendant le drag
+    var progress = Math.min(Math.abs(diffX) / window.innerWidth, 1);
+    swipeBg.style.opacity = progress * 0.3;
   }
 }, { passive: true });
 
 document.addEventListener('touchend', function(e) {
-  if (!currentView || !isSwiping) return;
+  if (!currentView || !isSwiping) {
+    swipeBg.style.opacity = '0';
+    currentView = null;
+    nextView = null;
+    return;
+  }
+
   var diff = touchCurrentX - touchStartX;
   var absDiff = Math.abs(diff);
 
@@ -520,14 +552,13 @@ document.addEventListener('touchend', function(e) {
 
     if (targetRoute) {
       var ease = 'cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+      swipeBg.style.opacity = '0.5';
       currentView.style.transition = 'transform 0.3s ' + ease;
       nextView.style.transition = 'transform 0.3s ' + ease;
-
       currentView.style.transform = direction === 'left' ? 'translateX(-100%)' : 'translateX(100%)';
       nextView.style.transform = 'translateX(0)';
 
       setTimeout(function() {
-        // Nettoyer les styles
         currentView.style.transition = '';
         currentView.style.transform = '';
         currentView.style.display = '';
@@ -536,10 +567,12 @@ document.addEventListener('touchend', function(e) {
           nextView.style.transform = '';
         }
         navigateTo(targetRoute);
+        swipeBg.style.opacity = '0';
         currentView = null;
         nextView = null;
         isSwiping = false;
         direction = null;
+        directionLocked = false;
       }, 300);
     } else {
       resetSwipe();
@@ -550,6 +583,7 @@ document.addEventListener('touchend', function(e) {
 }, { passive: true });
 
 function resetSwipe() {
+  swipeBg.style.opacity = '0';
   if (currentView) {
     currentView.style.transition = 'transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
     currentView.style.transform = 'translateX(0)';
@@ -570,6 +604,7 @@ function resetSwipe() {
       }
       isSwiping = false;
       direction = null;
+      directionLocked = false;
     }, 300);
   }
 }
