@@ -600,7 +600,8 @@ a.contact-row:hover{ transform: translateX(3px); }
   .why-item > div { text-align: center; }
   .why-num { margin-bottom: 8px; }
   .apropos-stats-wrap { padding: 0; }
-  .apropos-logo { display: none; }
+  .apropos-logo { display: block; max-width: 180px; margin: 0 auto 20px; }
+  .network .eyebrow { display: inline-flex; align-items: center; gap: 8px; }
   .apropos-stats { grid-template-columns: 1fr 1fr; padding: 0; gap: 16px; }
   .astat-card { padding: 20px 16px; text-align: center; }
   .astat-num { font-size: 34px; }
