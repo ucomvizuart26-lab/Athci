@@ -543,9 +543,8 @@ a.contact-row:hover{ transform: translateX(3px); }
   .main-nav.open { transform: translateX(0); }
   .main-nav a { color: rgba(255,255,255,0.85); font-size: 18px; padding: 12px 0; width: 100%; border-bottom: 1px solid rgba(255,255,255,0.08); border-radius: 0; border-left: none; border-right: none; border-top: none; }
   .main-nav a::after { display: none; }
-  body.nav-open::before { content: ''; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 550; }
-}
-
+  body.nav-open::before { content: ''; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 550; pointer-events: none; }
+   
 /* =========================================================
    RESPONSIVE MOBILE COMPLET
    ========================================================= */
