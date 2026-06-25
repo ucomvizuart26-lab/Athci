@@ -563,6 +563,8 @@ a.contact-row:hover{ transform: translateX(3px); }
   .hero-watermark { display: block !important; }
   .hero-watermark img { opacity: 0.20; }
   .hero-watermark::after { display: block !important; background: linear-gradient(to top, rgba(27,58,107,0.95) 40%, rgba(27,58,107,0.4) 70%, rgba(27,58,107,0) 100%); }
+  .network .eyebrow { display: inline-flex; align-items: center; gap: 8px; justify-content: center; width: 100%; }
+  .network .section-head { display: flex; flex-direction: column; align-items: center; }
 
   /* PAGE HERO */
   .page-hero { min-height: auto; flex-direction: column; padding: 48px 0 0; overflow: hidden; }
@@ -575,7 +577,7 @@ a.contact-row:hover{ transform: translateX(3px); }
   .page-title { text-align: center; }
   .page-sub { text-align: center; }
   .page-hero-img-right { display: flex !important; position: relative; width: 100%; height: 260px; justify-content: center; align-items: flex-end; overflow: hidden; margin-top: 16px; bottom: auto; right: auto; top: auto; }
-  .page-hero-img-right img { height: 100%; width: auto; max-height: 260px; object-fit: contain; object-position: bottom center; }
+  .page-hero-img-right img { height: 100%; width: auto; max-height: 340px; object-fit: contain; object-position: bottom center; }
 
   /* IMAGE SERVICES MOBILE */
  .page-hero--services .page-hero-img-right {
